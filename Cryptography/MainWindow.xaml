@@ -59,28 +59,23 @@
             <!-- Left Panel - Algorithms -->
             <StackPanel Grid.Column="0" Margin="0,0,10,0">
                 <Border Style="{StaticResource ModernCard}" Margin="0,0,0,12">
-                    <StackPanel>
-                        <TextBlock Style="{StaticResource SectionHeader}" Text="CRYPTOGRAPHY ALGORITHMS"/>
-                        <StackPanel Margin="0,8,0,0">
-                            <TextBlock Text="Symmetric Algorithms" Foreground="White" FontWeight="SemiBold" Margin="0,0,0,6"/>
-                            <RadioButton Content="AES" GroupName="Algorithms" 
-                                       Foreground="White" Margin="0,4" IsChecked="True" Checked="Algorithm_Checked"/>
-                            <RadioButton Content="DES" GroupName="Algorithms" 
-                                       Foreground="White" Margin="0,4" Checked="Algorithm_Checked"/>
-                            <RadioButton Content="3DES" GroupName="Algorithms" 
-                                       Foreground="White" Margin="0,4" Checked="Algorithm_Checked"/>
-                        </StackPanel>
-
-                        <Separator Background="#2A4365" Margin="0,12,0,8"/>
-
-                        <StackPanel>
-                            <TextBlock Text="Operation Modes" Foreground="White" FontWeight="SemiBold" Margin="0,0,0,6"/>
-                            <RadioButton Content="ECB" GroupName="Modes" 
-                                       Foreground="White" Margin="0,4" IsChecked="True" Checked="Mode_Checked"/>
-                            <RadioButton Content="CBC" GroupName="Modes" 
-                                       Foreground="White" Margin="0,4" Checked="Mode_Checked"/>
-                        </StackPanel>
+                    <StackPanel Background="#071018" Width="200">
+                        <Expander Header="Algorithms" Foreground="White" FontWeight="SemiBold" Background="#0F1A25">
+                            <StackPanel>
+                                <RadioButton Content="AES" GroupName="Algorithms" Foreground="White" Margin="5,2" Checked="Algorithm_Checked"/>
+                                <RadioButton Content="DES" GroupName="Algorithms" Foreground="White" Margin="5,2" Checked="Algorithm_Checked"/>
+                                <RadioButton Content="3DES" GroupName="Algorithms" Foreground="White" Margin="5,2" Checked="Algorithm_Checked"/>
+                            </StackPanel>
+                        </Expander>
+                        <Separator Background="#2A4365" Margin="0,12,0,8"/>  
+                        <Expander Header="Modes" Foreground="White" FontWeight="SemiBold" Background="#0F1A25" Margin="0,10,0,0">
+                            <StackPanel>
+                                <RadioButton Content="ECB" GroupName="Modes" Foreground="White" Margin="5,2" Checked="Mode_Checked"/>
+                                <RadioButton Content="CBC" GroupName="Modes" Foreground="White" Margin="5,2" Checked="Mode_Checked"/>
+                            </StackPanel>
+                        </Expander>
                     </StackPanel>
+
                 </Border>
 
                 <!-- Status Panel - Moved to left side -->
