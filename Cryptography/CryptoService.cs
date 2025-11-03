@@ -36,7 +36,7 @@ namespace Cryptography
             using (FileStream fsInput = new FileStream(path, FileMode.Open, FileAccess.Read))
             using (FileStream fsEncrypted = new FileStream(outPath, FileMode.Create, FileAccess.Write))
             {
-                // IV رو اول فایل بنویس تا بعداً برای Decrypt استفاده کنیم
+                // write IV at the beginning of the file for using it in Decryption
                 fsEncrypted.Write(algorithm.IV, 0, algorithm.IV.Length);
 
                 using (var cryptoTransform = algorithm.CreateEncryptor(key, algorithm.IV))
@@ -65,14 +65,13 @@ namespace Cryptography
                 "ecb" => CipherMode.ECB,
                 _ => throw new ArgumentException("Invalid mode")
             };
-            algorithm.Padding = PaddingMode.PKCS7;
 
             var outPath = path.Replace(".enc", "");
 
             using (FileStream fsInput = new FileStream(path, FileMode.Open, FileAccess.Read))
             using (FileStream fsDecrypted = new FileStream(outPath, FileMode.Create, FileAccess.Write))
             {
-                // IV رو از اول فایل بخون
+                // read IV from beginning of file
                 byte[] iv = new byte[algorithm.BlockSize / 8];
                 fsInput.ReadExactly(iv);
 
@@ -111,9 +110,9 @@ namespace Cryptography
                 _ => throw new ArgumentException("Unsupported algorithm")
             };
 
-            // بهتره هر بار salt جدید بسازی (فعلاً دمو)
-            // todo: what is salt, how to generate a generic one?
-            var salt = Encoding.UTF8.GetBytes("static-salt-for-demo");
+            var rng = RandomNumberGenerator.Create();
+            var salt = new byte[16];
+            rng.GetBytes(salt);
             using var kdf = new Rfc2898DeriveBytes(password, salt, 10000, HashAlgorithmName.SHA256);
             var key = kdf.GetBytes(lengthBytes);
             return Convert.ToBase64String(key);

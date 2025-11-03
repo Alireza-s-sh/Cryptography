@@ -64,11 +64,11 @@
                         <StackPanel Margin="0,8,0,0">
                             <TextBlock Text="Symmetric Algorithms" Foreground="White" FontWeight="SemiBold" Margin="0,0,0,6"/>
                             <RadioButton Content="AES" GroupName="Algorithms" 
-                                       Foreground="White" Margin="0,4" IsChecked="True"/>
+                                       Foreground="White" Margin="0,4" IsChecked="True" Checked="Algorithm_Checked"/>
                             <RadioButton Content="DES" GroupName="Algorithms" 
-                                       Foreground="White" Margin="0,4"/>
+                                       Foreground="White" Margin="0,4" Checked="Algorithm_Checked"/>
                             <RadioButton Content="3DES" GroupName="Algorithms" 
-                                       Foreground="White" Margin="0,4"/>
+                                       Foreground="White" Margin="0,4" Checked="Algorithm_Checked"/>
                         </StackPanel>
 
                         <Separator Background="#2A4365" Margin="0,12,0,8"/>
@@ -76,9 +76,9 @@
                         <StackPanel>
                             <TextBlock Text="Operation Modes" Foreground="White" FontWeight="SemiBold" Margin="0,0,0,6"/>
                             <RadioButton Content="ECB" GroupName="Modes" 
-                                       Foreground="White" Margin="0,4" IsChecked="True"/>
+                                       Foreground="White" Margin="0,4" IsChecked="True" Checked="Mode_Checked"/>
                             <RadioButton Content="CBC" GroupName="Modes" 
-                                       Foreground="White" Margin="0,4"/>
+                                       Foreground="White" Margin="0,4" Checked="Mode_Checked"/>
                         </StackPanel>
                     </StackPanel>
                 </Border>
@@ -89,9 +89,9 @@
                         <TextBlock Style="{StaticResource SectionHeader}" Text="SYSTEM STATUS"/>
                         <StackPanel Margin="0,8,0,0">
                             <TextBlock Text="● Ready" Foreground="#4ADE80" FontSize="11" Margin="0,2"/>
-                            <TextBlock Text="Algorithm: AES" Foreground="#88AACC" FontSize="11" Margin="0,2"/>
-                            <TextBlock Text="Mode: ECB" Foreground="#88AACC" FontSize="11" Margin="0,2"/>
-                            <TextBlock Text="Key: Not Set" Foreground="#88AACC" FontSize="11" Margin="0,2"/>
+                            <TextBlock Text="Algorithm: " x:Name="Alg_Status" Foreground="#88AACC" FontSize="11" Margin="0,2"/>
+                            <TextBlock Text="Mode: " x:Name="Mode_Status" Foreground="#88AACC" FontSize="11" Margin="0,2"/>
+                            <TextBlock Text="Key: " x:Name="Key_Status" Foreground="#88AACC" FontSize="11" Margin="0,2"/>
                         </StackPanel>
                     </StackPanel>
                 </Border>
@@ -114,7 +114,7 @@
                                 <TextBox x:Name="FilePathText" Height="38" VerticalAlignment="Center" 
                                          Background="Transparent" Foreground="White" BorderThickness="0" 
                                          Padding="14,0" FontSize="12" VerticalContentAlignment="Center"
-                                         Text=""/>
+                                         Text="Select input file..."/>
                                 <Button x:Name="BrowseBtn" Content="Browse" Width="90" Height="32" 
                                         Style="{StaticResource AccentButton}" Margin="6,0" 
                                         Click="BrowseBtn_Click"/>
@@ -216,7 +216,7 @@
                                 VerticalAlignment="Center" Height="42" Margin="0,0,0,12">
                             <TextBox x:Name="KeyBox" Background="Transparent" Foreground="White" BorderThickness="0" 
                                      Padding="12" FontFamily="Consolas" FontSize="11" VerticalContentAlignment="Center"
-                                     Text="w+r:RVM12Ag0bC1Go5crc+BPcDN8b:2H+H3e:rxJVF2g--"/>
+                                     Text="Not Set"/>
                         </Border>
 
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">

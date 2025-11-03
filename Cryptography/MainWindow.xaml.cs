@@ -86,6 +86,7 @@ namespace Cryptography
             var alg = SelectedAlg(); // از همون لیست الگوریتم انتخاب شده
             KeyBox.Text = _crypto.GenerateRandomKey(alg);
             AppendLog($"🔑 {alg} key generated successfully");
+            UpdateSystemStatus();
         }
 
         private void ImportKey_Click(object sender, RoutedEventArgs e)
@@ -149,7 +150,7 @@ namespace Cryptography
             foreach (var child in FindVisualChildren<RadioButton>(this))
             {
                 if (child.GroupName == "Modes" && child.IsChecked == true)
-                    return child.Content.ToString();
+                    return child.Content.ToString() ?? "CBC";
             }
             return "CBC"; // مقدار پیش‌فرض
         }
@@ -287,6 +288,27 @@ namespace Cryptography
             }
 
             return results;
+        }
+        private void Algorithm_Checked(object sender, RoutedEventArgs e)
+        {
+            UpdateSystemStatus();
+        }
+
+        private void Mode_Checked(object sender, RoutedEventArgs e)
+        {
+            UpdateSystemStatus();
+        }
+
+        private void UpdateSystemStatus()
+        {
+            if (Alg_Status == null || Mode_Status == null || Key_Status == null)
+                return;
+            string alg = SelectedAlg();
+            string mode = SelectedMode();
+            var key = KeyBox.Text;
+            Alg_Status.Text = $"Algorithm: {alg}";
+            Mode_Status.Text = $"Mode: {mode}";
+            Key_Status.Text = $"Key: {key}";
         }
 
     }
