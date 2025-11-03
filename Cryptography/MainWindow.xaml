@@ -139,7 +139,7 @@
                     <!-- Log Section - Improved spacing -->
                     <StackPanel Grid.Row="2" Margin="0,25,0,0">
                         <DockPanel Margin="0,0,0,8">
-                            <TextBlock Style="{StaticResource SectionHeader}" Text="APPLICATION LOG" DockPanel.Dock="Left"/>
+                            
                             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
                                 <Button x:Name="ClearLogBtn" Content="Clear" 
                                         Style="{StaticResource AccentButton}" Width="70" Height="26" FontSize="11"
