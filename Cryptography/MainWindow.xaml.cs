@@ -115,7 +115,8 @@ namespace Cryptography
 
         private void PasswordKey_Click(object sender, RoutedEventArgs e)
         {
-            var pw = Microsoft.VisualBasic.Interaction.InputBox("Enter password to derive key:", "Password to Key", "");
+            //var pw = Microsoft.VisualBasic.Interaction.InputBox("Enter password to derive key:", "Password to Key", "");
+            var pw = PromptForPassword();
             if (!string.IsNullOrEmpty(pw))
             {
                 var alg = SelectedAlg();
