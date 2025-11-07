@@ -62,7 +62,7 @@
                     <StackPanel Background="#071018" Width="200">
                         <Expander Header="Algorithms" Foreground="White" FontWeight="SemiBold" Background="#0F1A25">
                             <StackPanel>
-                                <RadioButton Content="AES" GroupName="Algorithms" Foreground="White" Margin="5,2" Checked="Algorithm_Checked"/>
+                                <RadioButton Content="AES" GroupName="Algorithms" Foreground="White" Margin="5,2" Checked="Algorithm_Checked" IsChecked="True"/>
                                 <RadioButton Content="DES" GroupName="Algorithms" Foreground="White" Margin="5,2" Checked="Algorithm_Checked"/>
                                 <RadioButton Content="3DES" GroupName="Algorithms" Foreground="White" Margin="5,2" Checked="Algorithm_Checked"/>
                             </StackPanel>
@@ -71,7 +71,7 @@
                         <Expander Header="Modes" Foreground="White" FontWeight="SemiBold" Background="#0F1A25" Margin="0,10,0,0">
                             <StackPanel>
                                 <RadioButton Content="ECB" GroupName="Modes" Foreground="White" Margin="5,2" Checked="Mode_Checked"/>
-                                <RadioButton Content="CBC" GroupName="Modes" Foreground="White" Margin="5,2" Checked="Mode_Checked"/>
+                                <RadioButton Content="CBC" GroupName="Modes" Foreground="White" Margin="5,2" Checked="Mode_Checked" IsChecked="True"/>
                             </StackPanel>
                         </Expander>
                     </StackPanel>
