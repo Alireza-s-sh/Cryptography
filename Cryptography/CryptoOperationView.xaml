@@ -159,28 +159,47 @@
                         <TextBlock Style="{StaticResource SectionHeader}" Text="APPLICATION LOG" DockPanel.Dock="Left"/>
                         <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
                             <TextBlock x:Name="LogStats" Text="0 entries" Foreground="#88AACC" FontSize="11" 
-                                       VerticalAlignment="Center" Margin="0,0,12,0"/>
+                       VerticalAlignment="Center" Margin="0,0,12,0"/>
                             <Button x:Name="ClearLogBtn" Content="Clear" Style="{StaticResource AccentButton}" 
-                                    Width="60" Height="24" FontSize="10" Click="ClearLogBtn_Click"/>
+                    Width="60" Height="24" FontSize="10" Click="ClearLogBtn_Click"/>
                             <Button x:Name="CopyLogBtn" Content="Copy" Style="{StaticResource AccentButton}" 
-                                    Width="60" Height="24" FontSize="10" Margin="6,0,0,0" Click="CopyLogBtn_Click"/>
+                    Width="60" Height="24" FontSize="10" Margin="6,0,0,0" Click="CopyLogBtn_Click"/>
                         </StackPanel>
                     </DockPanel>
 
                     <Border Background="#0A1620" BorderThickness="1" BorderBrush="#1E3A5C">
-                        <ScrollViewer x:Name="LogScroll" Height="150" CanContentScroll="True" 
-                                      VerticalScrollBarVisibility="Auto" ScrollChanged="LogScroll_ScrollChanged">
-                            <ItemsControl x:Name="LogItemsControl">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border Padding="12,5" Background="Transparent" BorderThickness="0,0,0,1" BorderBrush="#1A2D4A">
-                                            <TextBlock Text="{Binding}" TextWrapping="Wrap"
-                                                       FontFamily="Consolas" FontSize="11" Foreground="#B8D4FF"/>
-                                        </Border>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </ScrollViewer>
+                        <!-- ✅ تغییر اصلی: استفاده از ListBox به جای ScrollViewer+ItemsControl -->
+                        <ListBox x:Name="LogList" Height="150" 
+                 Background="Transparent" BorderThickness="0"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto">
+
+                            <!-- تمیز کردن استایل آیتم‌ها (حذف هایلایت آبی هنگام انتخاب) -->
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="Padding" Value="0"/>
+                                    <Setter Property="Margin" Value="0"/>
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="ListBoxItem">
+                                                <Border Background="Transparent" Padding="12,5" BorderThickness="0,0,0,1" BorderBrush="#1A2D4A">
+                                                    <ContentPresenter />
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+
+                            <!-- تمپلیت نمایش متن -->
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" TextWrapping="Wrap"
+                               FontFamily="Consolas" FontSize="11" Foreground="#B8D4FF"/>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
                     </Border>
                 </StackPanel>
             </Grid>
@@ -197,7 +216,7 @@
 
                         <Button Content="📥 Import Key File" Style="{StaticResource AccentButton}" 
                                 Height="42" Margin="0,0,0,8" Click="ImportKey_Click"/>
-                        <Button Content="💾 Save Key As..." Style="{StaticResource AccentButton}" 
+                        <Button x:Name="SaveKeyBtn" Content="💾 Save Key As..." Style="{StaticResource AccentButton}" 
                                 Height="42" Click="SaveKey_Click"/>
                     </StackPanel>
                 </StackPanel>
@@ -215,7 +234,7 @@
                                  Text="Not Set"/>
                     </Border>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Button Content="Password" Style="{StaticResource AccentButton}" Height="32" Width="100" Margin="8,0,0,0" Click="PasswordKey_Click"/>
+                        <Button x:Name="PasswordDialog" Content="Password" Style="{StaticResource AccentButton}" Height="32" Width="100" Margin="8,0,0,0" Click="PasswordKey_Click"/>
                         <Button Content="Import" Style="{StaticResource AccentButton}" Height="32" Width="100" Margin="8,0,0,0" Click="ImportKey_Click"/>
                     </StackPanel>
                 </StackPanel>

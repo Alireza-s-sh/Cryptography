@@ -28,7 +28,7 @@ namespace Cryptography
         public CryptoOperationView()
         {
             InitializeComponent();
-            LogItemsControl.ItemsSource = _logEntries;
+            LogList.ItemsSource = _logEntries;
         }
 
         // متدی برای تنظیم حالت Producer یا Consumer
@@ -43,8 +43,9 @@ namespace Cryptography
                 // فقط دکمه Decrypt باشد، Encrypt نباشد
                 EncryptActionPanel.Visibility = Visibility.Collapsed;
                 DecryptBtn.Visibility = Visibility.Visible;
-
+                PasswordDialog.Visibility = Visibility.Collapsed;
                 GenerateKeyBtn.Visibility = Visibility.Collapsed;
+                SaveKeyBtn.Visibility = Visibility.Collapsed;
                 AppendLog("🔵 Consumer Mode Activated (Decrypt Only)");
             }
             else
@@ -87,8 +88,8 @@ namespace Cryptography
                 await Task.Run(() =>
                 _crypto.EncryptFile(
                     path, key, alg, mode,
-                    TargetKeys.PublicKey,
-                    MyKeys.PrivateKey,
+                    TargetKeys.PublicKey,  // consumer public key
+                    MyKeys.PrivateKey,     // producer private key
                     _selectedEncryptionMethod));
 
                 AppendLog("✅ Encryption completed successfully!");
@@ -132,6 +133,7 @@ namespace Cryptography
         private void ImportKey_Click(object sender, RoutedEventArgs e)
         {
             var dlg = new OpenFileDialog();
+            dlg.Title = "Import key file";
             if (dlg.ShowDialog() == true)
             {
                 KeyBox.Text = File.ReadAllText(dlg.FileName);
@@ -142,6 +144,8 @@ namespace Cryptography
         private void SaveKey_Click(object sender, RoutedEventArgs e)
         {
             var dlg = new SaveFileDialog();
+            dlg.Title = "Save key";
+            dlg.FileName = "key.txt";
             if (dlg.ShowDialog() == true)
             {
                 File.WriteAllText(dlg.FileName, KeyBox.Text);
@@ -155,7 +159,6 @@ namespace Cryptography
             if (!string.IsNullOrEmpty(pw))
             {
                 var alg = SelectedAlg();
-                //var password = PromptForPassword(); // تابع ساده که یه InputBox نشون بده
                 KeyBox.Text = _crypto.DeriveKeyFromPassword(pw, alg);
                 AppendLog("Derived key from password.");
             }
@@ -185,23 +188,21 @@ namespace Cryptography
         {
             Dispatcher.Invoke(() =>
             {
-                _logEntries.Add($"[{DateTime.Now:HH:mm:ss}] {text}");
+                string timestamp = DateTime.Now.ToString("HH:mm:ss");
+                string logEntry = $"[{timestamp}] {text}";
+
+                _logEntries.Add(logEntry);
                 _logCount++;
                 LogStats.Text = $"{_logCount} entries";
-                if (_autoScrollEnabled) ScrollToEndDelayed();
+
+                // ✅ اسکرول خودکار هوشمند با ListBox
+                // اگر کاربر دارد لاگ‌های قدیمی را می‌خواند، مزاحمش نمی‌شویم
+                // اما اگر اسکرول پایین است، آن را پایین نگه می‌داریم
+                if (LogList.Items.Count > 0)
+                {
+                    LogList.ScrollIntoView(LogList.Items[LogList.Items.Count - 1]);
+                }
             });
-        }
-
-        private async void ScrollToEndDelayed()
-        {
-            await Task.Delay(200);
-            await Dispatcher.InvokeAsync(() => LogScroll.ScrollToEnd());
-        }
-
-        private void LogScroll_ScrollChanged(object sender, ScrollChangedEventArgs e)
-        {
-            if (e.ExtentHeightChange == 0)
-                _autoScrollEnabled = Math.Abs(LogScroll.VerticalOffset - LogScroll.ScrollableHeight) < 1.0;
         }
 
         private void ClearLogBtn_Click(object sender, RoutedEventArgs e) { _logEntries.Clear(); _logCount = 0; }
