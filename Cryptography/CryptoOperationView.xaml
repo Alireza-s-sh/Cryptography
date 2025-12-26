@@ -101,25 +101,25 @@
                 </StackPanel>
 
                 <!-- Action Buttons -->
+
+                <!-- Action Buttons -->
                 <StackPanel Grid.Row="1" Margin="0,20,0,0">
                     <TextBlock Style="{StaticResource SectionHeader}" Text="ACTIONS"/>
-                    <Grid Margin="0,6,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="12"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+
+                    <!-- ✅ تغییرات: استفاده از StackPanel وسط‌چین به جای Grid -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,6,0,0">
 
                         <!-- Encrypt Group -->
-                        <Grid x:Name="EncryptActionPanel" Grid.Column="0" Margin="0,10,10,10">
+                        <!-- عرض 250 داده شد تا دکمه بزرگ و مرتب باشد -->
+                        <Grid x:Name="EncryptActionPanel" Width="250" Margin="5,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="40" />
                             </Grid.ColumnDefinitions>
 
                             <Button x:Name="EncryptMainButton" Grid.Column="0" Height="40"
-                                    Background="#3BA6FF" Foreground="White" FontWeight="Bold"
-                                    Click="EncryptBtn_Click">
+                    Background="#3BA6FF" Foreground="White" FontWeight="Bold"
+                    Click="EncryptBtn_Click">
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                     <TextBlock Text="🔒 Encrypt (" />
                                     <TextBlock x:Name="EncryptionMethodText" Text="Secure Envelope" />
@@ -128,8 +128,8 @@
                             </Button>
 
                             <Button x:Name="EncryptMethodBtn" Grid.Column="1" Height="40"
-                                    Background="#3BA6FF" Foreground="White"
-                                    Click="EncryptMethodBtn_Click">
+                    Background="#3BA6FF" Foreground="White"
+                    Click="EncryptMethodBtn_Click">
                                 ▶
                                 <Button.ContextMenu>
                                     <ContextMenu x:Name="EncryptionMethodMenu">
@@ -141,12 +141,17 @@
                             </Button>
                         </Grid>
 
-                        <Button x:Name="DecryptBtn" Grid.Column="2" Content="🔓 Decrypt" Height="40" Margin="10"
-                                Background="#1A2D4A" Foreground="White" BorderBrush="#2D4F7C"
-                                BorderThickness="1" FontSize="13" FontWeight="SemiBold"
-                                Click="DecryptBtn_Click"/>
-                    </Grid>
+                        <!-- Decrypt Button -->
+                        <!-- عرض 250 داده شد تا هم‌اندازه دکمه رمزنگاری باشد -->
+                        <Button x:Name="DecryptBtn" Content="🔓 Decrypt" 
+                Width="250" Height="40" Margin="5,0"
+                Background="#1A2D4A" Foreground="White" BorderBrush="#2D4F7C"
+                BorderThickness="1" FontSize="13" FontWeight="SemiBold"
+                Click="DecryptBtn_Click"/>
+                    </StackPanel>
                 </StackPanel>
+
+
 
                 <!-- Log Section -->
                 <StackPanel Grid.Row="2" Margin="0,25,0,0">

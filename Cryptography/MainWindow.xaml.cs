@@ -62,5 +62,10 @@ namespace Cryptography
             BtnProducer.Background = Brushes.Transparent;
             BtnProducer.Foreground = Brushes.White;
         }
+
+        private void ContentTabs_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }

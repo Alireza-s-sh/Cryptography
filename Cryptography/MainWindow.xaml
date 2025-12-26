@@ -73,7 +73,7 @@
                  (Or simply put them inside the TabControl.Content if not using the custom header trick) -->
             
             <!-- Better approach with the TabControl directly: -->
-            <TabControl x:Name="ContentTabs" BorderThickness="0" Background="Transparent" Margin="-20,-75,-20,-20">
+            <TabControl x:Name="ContentTabs" BorderThickness="0" Background="Transparent" Margin="-20,-75,-20,-20" SelectionChanged="ContentTabs_SelectionChanged">
                 <TabControl.Resources>
                     <Style TargetType="TabItem">
                         <Setter Property="Visibility" Value="Collapsed"/> <!-- Hide default headers -->

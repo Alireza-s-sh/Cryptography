@@ -19,8 +19,8 @@ namespace Cryptography
         private EncryptionMethod _selectedEncryptionMethod = EncryptionMethod.SecureEnvelope;
 
         // کلیدها توسط MainWindow ست می‌شوند
-        public KeyModel MyKeys { get; set; }
-        public KeyModel TargetKeys { get; set; }
+        public KeyModel ProducerKeys { get; set; }
+        public KeyModel ConsumerKeys { get; set; }
 
         public CryptoOperationView()
         {
@@ -31,20 +31,26 @@ namespace Cryptography
         // متدی برای تنظیم حالت Producer یا Consumer
         public void ConfigureView(bool isConsumerMode, KeyModel myKeys, KeyModel targetKeys)
         {
-            MyKeys = myKeys;
-            TargetKeys = targetKeys;
+            ProducerKeys = myKeys;
+            ConsumerKeys = targetKeys;
 
             if (isConsumerMode)
             {
-                // مخفی کردن دکمه‌ها در حالت Consumer
+                // 🔵 حالت Consumer
+                // فقط دکمه Decrypt باشد، Encrypt نباشد
                 EncryptActionPanel.Visibility = Visibility.Collapsed;
+                DecryptBtn.Visibility = Visibility.Visible;
+
                 GenerateKeyBtn.Visibility = Visibility.Collapsed;
                 AppendLog("🔵 Consumer Mode Activated (Decrypt Only)");
             }
             else
             {
-                // حالت Producer
+                // 🟠 حالت Producer
+                // فقط دکمه Encrypt باشد، Decrypt نباشد
                 EncryptActionPanel.Visibility = Visibility.Visible;
+                DecryptBtn.Visibility = Visibility.Collapsed; // ✅ دکمه دیکریپت حذف شد
+
                 GenerateKeyBtn.Visibility = Visibility.Visible;
                 AppendLog("🟠 Producer Mode Activated");
             }
@@ -78,8 +84,8 @@ namespace Cryptography
                 await Task.Run(() =>
                 _crypto.EncryptFile(
                     path, key, alg, mode,
-                    TargetKeys.PublicKey,
-                    MyKeys.PrivateKey,
+                    ConsumerKeys.PublicKey,
+                    ProducerKeys.PrivateKey,
                     _selectedEncryptionMethod));
 
                 AppendLog("✅ Encryption completed successfully!");
@@ -102,8 +108,8 @@ namespace Cryptography
                 // و با کلید عمومی هدف (Target/Producer) امضا را چک می‌کنیم
                 await Task.Run(() => _crypto.DecryptFile(
                     path, SelectedAlg(), mode,
-                    MyKeys.PrivateKey,
-                    TargetKeys.PublicKey,
+                    ProducerKeys.PrivateKey,
+                    ConsumerKeys.PublicKey,
                     key));
 
                 AppendLog("Decryption finished.");
