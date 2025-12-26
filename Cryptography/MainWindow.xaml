@@ -67,7 +67,7 @@
                                 <RadioButton Content="3DES" GroupName="Algorithms" Foreground="White" Margin="5,2" Checked="Algorithm_Checked"/>
                             </StackPanel>
                         </Expander>
-                        <Separator Background="#2A4365" Margin="0,12,0,8"/>  
+                        <Separator Background="#2A4365" Margin="0,12,0,8"/>
                         <Expander Header="Modes" Foreground="White" FontWeight="SemiBold" Background="#0F1A25" Margin="0,10,0,0">
                             <StackPanel>
                                 <RadioButton Content="ECB" GroupName="Modes" Foreground="White" Margin="5,2" Checked="Mode_Checked"/>
@@ -126,9 +126,49 @@
                                 <ColumnDefinition Width="12"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Button x:Name="EncryptBtn" Content="🔒 Encrypt" Grid.Column="0" Height="48" 
-                                    Style="{StaticResource AccentButton}" FontSize="13" FontWeight="SemiBold"
-                                    Click="EncryptBtn_Click"/>
+                            <Grid Margin="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="40" />
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Main Encrypt Button -->
+                                <Button
+        x:Name="EncryptMainButton"
+        Grid.Column="0"
+        Height="40"
+        Background="#3BA6FF"
+        Foreground="White"
+        FontWeight="Bold"
+        Click="EncryptBtn_Click">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <TextBlock Text="🔒 Encrypt (" />
+                                        <TextBlock x:Name="EncryptionMethodText" Text="Secure Envelope" />
+                                        <TextBlock Text=")" />
+                                    </StackPanel>
+                                </Button>
+
+                                <!-- Dropdown Part -->
+                                <Button
+        Grid.Column="1"
+        Height="40"
+        Background="#3BA6FF"
+        Foreground="White"
+        Click="EncryptMethodBtn_Click">
+                                    ▶
+                                    <Button.ContextMenu>
+                                        <ContextMenu x:Name="EncryptionMethodMenu">
+                                            <MenuItem Header="Secure Envelope"
+                          Click="SelectSecureEnvelope"/>
+                                            <MenuItem Header="Symmetric"
+                          Click="SelectSymmetric"/>
+                                            <MenuItem Header="RSA Direct"
+                          Click="SelectRsaDirect"/>
+                                        </ContextMenu>
+                                    </Button.ContextMenu>
+                                </Button>
+                            </Grid>
+
                             <Button x:Name="DecryptBtn" Content="🔓 Decrypt" Grid.Column="2" Height="48" 
                                     Background="#1A2D4A" Foreground="White" BorderBrush="#2D4F7C"
                                     BorderThickness="1" FontSize="13" FontWeight="SemiBold"
@@ -139,7 +179,7 @@
                     <!-- Log Section - Improved spacing -->
                     <StackPanel Grid.Row="2" Margin="0,25,0,0">
                         <DockPanel Margin="0,0,0,8">
-                            
+
                             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
                                 <Button x:Name="ClearLogBtn" Content="Clear" 
                                         Style="{StaticResource AccentButton}" Width="70" Height="26" FontSize="11"
@@ -158,7 +198,7 @@
                                     <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
                                         <TextBlock x:Name="LogStats" Text="0 entries" Foreground="#88AACC" FontSize="11" 
                       VerticalAlignment="Center" Margin="0,0,12,0"/>
-                                        
+
                                     </StackPanel>
                                 </DockPanel>
 

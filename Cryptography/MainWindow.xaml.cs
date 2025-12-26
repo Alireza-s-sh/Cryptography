@@ -1,4 +1,6 @@
-﻿using Cryptography.Views;
+﻿using Cryptography.Enums;
+using Cryptography.Models;
+using Cryptography.Views;
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -15,9 +17,26 @@ namespace Cryptography
         private ObservableCollection<string> _logEntries = new ObservableCollection<string>();
         private int _logCount = 0;
         private bool _autoScrollEnabled = true;
+        private EncryptionMethod _selectedEncryptionMethod = EncryptionMethod.SecureEnvelope;
+        private KeyModel _producerKeys;
+        private const string ProducerFileName = "producer.json";
+        private const string ConsumerFileName = "consumer.json";
         public MainWindow()
         {
             InitializeComponent();
+            // load private, public keys
+            var keyManager = new KeyManager();
+            try
+            {
+                _producerKeys = keyManager.LoadOrCreateKeys(ProducerFileName);
+                _producerKeys = keyManager.LoadOrCreateKeys(ConsumerFileName);
+                AppendLog("🔐 public, private key pair loaded successfully");
+            }
+            catch (Exception ex)
+            {
+                AppendLog("🔐 public private key pair loading Error!");
+                AppendLog(ex.ToString());
+            }
             LogItemsControl.ItemsSource = _logEntries;
         }
 
@@ -48,7 +67,15 @@ namespace Cryptography
                 var alg = SelectedAlg();
                 var mode = SelectedMode();
                 AppendLog($"selected Algorithm: {alg}, selected Mode: {mode}");
-                await Task.Run(() => _crypto.EncryptFile(path, key, alg, mode));
+                await Task.Run(() =>
+                _crypto.EncryptFile(
+                    path,
+                    key,
+                    alg,
+                    mode,
+                    _producerKeys.PublicKey,     // consumer public key
+                    _producerKeys.PrivateKey,    // producer private key
+                    _selectedEncryptionMethod));
 
                 AppendLog("✅ Encryption completed successfully!\n");
             }
@@ -311,6 +338,35 @@ namespace Cryptography
             Mode_Status.Text = $"Mode: {mode}";
             Key_Status.Text = $"Key: {key}";
         }
+
+        private void EncryptMethodBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.ContextMenu != null)
+            {
+                btn.ContextMenu.PlacementTarget = btn;
+                btn.ContextMenu.IsOpen = true;
+            }
+        }
+        private void SelectSecureEnvelope(object sender, RoutedEventArgs e)
+        {
+            SetEncryptionMethod(EncryptionMethod.SecureEnvelope, "Secure Envelope");
+        }
+
+        private void SelectSymmetric(object sender, RoutedEventArgs e)
+        {
+            SetEncryptionMethod(EncryptionMethod.SymmetricEncryption, "Symmetric");
+        }
+
+        private void SelectRsaDirect(object sender, RoutedEventArgs e)
+        {
+            SetEncryptionMethod(EncryptionMethod.RSADirect, "RSA Direct");
+        }
+        private void SetEncryptionMethod(EncryptionMethod method, string displayName)
+        {
+            _selectedEncryptionMethod = method;
+            EncryptionMethodText.Text = displayName;
+        }
+
 
     }
 }
