@@ -1,5 +1,6 @@
 ﻿using Cryptography.Enums;
 using Cryptography.Models;
+using Cryptography.Views;
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -19,8 +20,8 @@ namespace Cryptography
         private EncryptionMethod _selectedEncryptionMethod = EncryptionMethod.SecureEnvelope;
 
         // کلیدها توسط MainWindow ست می‌شوند
-        public KeyModel ProducerKeys { get; set; }
-        public KeyModel ConsumerKeys { get; set; }
+        public KeyModel MyKeys { get; set; }
+        public KeyModel TargetKeys { get; set; }
 
         public CryptoOperationView()
         {
@@ -31,8 +32,8 @@ namespace Cryptography
         // متدی برای تنظیم حالت Producer یا Consumer
         public void ConfigureView(bool isConsumerMode, KeyModel myKeys, KeyModel targetKeys)
         {
-            ProducerKeys = myKeys;
-            ConsumerKeys = targetKeys;
+            MyKeys = myKeys;
+            TargetKeys = targetKeys;
 
             if (isConsumerMode)
             {
@@ -84,8 +85,8 @@ namespace Cryptography
                 await Task.Run(() =>
                 _crypto.EncryptFile(
                     path, key, alg, mode,
-                    ConsumerKeys.PublicKey,
-                    ProducerKeys.PrivateKey,
+                    TargetKeys.PublicKey,
+                    MyKeys.PrivateKey,
                     _selectedEncryptionMethod));
 
                 AppendLog("✅ Encryption completed successfully!");
@@ -108,8 +109,8 @@ namespace Cryptography
                 // و با کلید عمومی هدف (Target/Producer) امضا را چک می‌کنیم
                 await Task.Run(() => _crypto.DecryptFile(
                     path, SelectedAlg(), mode,
-                    ProducerKeys.PrivateKey,
-                    ConsumerKeys.PublicKey,
+                    MyKeys.PrivateKey,
+                    TargetKeys.PublicKey,
                     key));
 
                 AppendLog("Decryption finished.");
@@ -148,9 +149,14 @@ namespace Cryptography
 
         private void PasswordKey_Click(object sender, RoutedEventArgs e)
         {
-            // اینجا باید پیاده‌سازی PromptForPassword را اضافه کنید یا از یک دیالوگ ساده استفاده کنید
-            // برای سادگی فعلا یک متن ثابت یا لاجیک قبلی خودتان را بگذارید
-            // var pw = PromptForPassword(); ...
+            var pw = PromptForPassword();
+            if (!string.IsNullOrEmpty(pw))
+            {
+                var alg = SelectedAlg();
+                //var password = PromptForPassword(); // تابع ساده که یه InputBox نشون بده
+                KeyBox.Text = _crypto.DeriveKeyFromPassword(pw, alg);
+                AppendLog("Derived key from password.");
+            }
         }
 
         private string SelectedAlg()

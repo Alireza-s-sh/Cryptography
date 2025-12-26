@@ -17,11 +17,9 @@ namespace Cryptography
             LoadKeys();
 
             // تنظیم ویوی Producer
-            // من پرودیوسر هستم: کلید من = ProducerKey، کلید هدف = ConsumerKey
             ProducerView.ConfigureView(isConsumerMode: false, myKeys: _producerKeys, targetKeys: _consumerKeys);
 
             // تنظیم ویوی Consumer
-            // من کانسومر هستم: کلید من = ConsumerKey، کلید هدف = ProducerKey
             ConsumerView.ConfigureView(isConsumerMode: true, myKeys: _consumerKeys, targetKeys: _producerKeys);
         }
 
