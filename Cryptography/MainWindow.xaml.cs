@@ -19,6 +19,7 @@ namespace Cryptography
         private bool _autoScrollEnabled = true;
         private EncryptionMethod _selectedEncryptionMethod = EncryptionMethod.SecureEnvelope;
         private KeyModel _producerKeys;
+        private KeyModel _consumerKeys;
         private const string ProducerFileName = "producer.json";
         private const string ConsumerFileName = "consumer.json";
         public MainWindow()
@@ -29,7 +30,7 @@ namespace Cryptography
             try
             {
                 _producerKeys = keyManager.LoadOrCreateKeys(ProducerFileName);
-                _producerKeys = keyManager.LoadOrCreateKeys(ConsumerFileName);
+                _consumerKeys = keyManager.LoadOrCreateKeys(ConsumerFileName);
                 AppendLog("🔐 public, private key pair loaded successfully");
             }
             catch (Exception ex)
@@ -73,7 +74,7 @@ namespace Cryptography
                     key,
                     alg,
                     mode,
-                    _producerKeys.PublicKey,     // consumer public key
+                    _consumerKeys.PublicKey,     // consumer public key
                     _producerKeys.PrivateKey,    // producer private key
                     _selectedEncryptionMethod));
 
@@ -99,7 +100,10 @@ namespace Cryptography
             {
                 var key = KeyBox.Text;
                 var mode = SelectedMode();
-                await Task.Run(() => _crypto.DecryptFile(path, key, SelectedAlg(), mode));
+
+                await Task.Run(() => _crypto.DecryptFile(path,
+                                                         SelectedAlg(),
+                                                         mode, _consumerKeys.PrivateKey, _producerKeys.PublicKey, key));
                 AppendLog("Decryption finished.");
             }
             catch (Exception ex)
