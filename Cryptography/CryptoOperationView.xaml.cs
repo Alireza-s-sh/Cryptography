@@ -18,6 +18,8 @@ namespace Cryptography
         private int _logCount = 0;
         private bool _autoScrollEnabled = true;
         private EncryptionMethod _selectedEncryptionMethod = EncryptionMethod.SecureEnvelope;
+        private string _currentAlg = "AES"; // مقدار پیش‌فرض مطابق XAML
+        private string _currentMode = "CBC"; // مقدار پیش‌فرض مطابق XAML
 
         // کلیدها توسط MainWindow ست می‌شوند
         public KeyModel MyKeys { get; set; }
@@ -158,32 +160,25 @@ namespace Cryptography
                 AppendLog("Derived key from password.");
             }
         }
+        private string PromptForPassword()
+        {
+            var dialog = new PasswordDialog
+            {
+               Owner= Window.GetWindow(this)
+            };
 
+            bool? result = dialog.ShowDialog();
+
+            return result == true ? dialog.PasswordValue : string.Empty;
+        }
         private string SelectedAlg()
         {
-            if (Dispatcher.CheckAccess())
-            {
-                foreach (var child in FindVisualChildren<RadioButton>(this))
-                {
-                    if (child.GroupName == "Algorithms" && child.IsChecked == true)
-                        return child.Content?.ToString() ?? "AES";
-                }
-                return "AES";
-            }
-            return Dispatcher.Invoke(() => SelectedAlg());
+            return _currentAlg;
         }
 
         private string SelectedMode()
         {
-            if (Dispatcher.CheckAccess())
-            {
-                foreach (var child in FindVisualChildren<RadioButton>(this))
-                {
-                    if (child.GroupName == "Modes" && child.IsChecked == true)
-                        return child.Content.ToString() ?? "CBC";
-                }
-            }
-            return Dispatcher.Invoke(() => SelectedMode());
+            return _currentMode;
         }
 
         private void AppendLog(string text)
@@ -213,8 +208,23 @@ namespace Cryptography
 
         private void CopyLogBtn_Click(object sender, RoutedEventArgs e) { Clipboard.SetText(string.Join(Environment.NewLine, _logEntries)); }
 
-        private void Algorithm_Checked(object sender, RoutedEventArgs e) => UpdateSystemStatus();
-        private void Mode_Checked(object sender, RoutedEventArgs e) => UpdateSystemStatus();
+        private void Algorithm_Checked(object sender, RoutedEventArgs e)
+        {
+            // هر وقت رادیویی تیک خورد، مقدارش را ذخیره کن
+            if (sender is RadioButton rb && rb.IsChecked == true)
+            {
+                _currentAlg = rb.Content.ToString();
+                UpdateSystemStatus();
+            }
+        }
+        private void Mode_Checked(object sender, RoutedEventArgs e)
+        {
+            if (sender is RadioButton rb && rb.IsChecked == true)
+            {
+                _currentMode = rb.Content.ToString();
+                UpdateSystemStatus();
+            }
+        }
 
         private void UpdateSystemStatus()
         {
@@ -243,15 +253,6 @@ namespace Cryptography
             EncryptionMethodText.Text = displayName;
         }
 
-        private static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
-        {
-            if (depObj == null) yield break;
-            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
-            {
-                var child = VisualTreeHelper.GetChild(depObj, i);
-                if (child is T t) yield return t;
-                foreach (var childOfChild in FindVisualChildren<T>(child)) yield return childOfChild;
-            }
-        }
+        
     }
 }
